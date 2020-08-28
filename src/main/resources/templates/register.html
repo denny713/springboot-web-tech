@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" type="text/css"></link>
+    <link th:href="@{/css/layout.css}" rel="stylesheet" type="text/css"></link>
+    <link th:href="@{/css/bootstrap-theme.css}" rel="stylesheet" type="text/css"></link>
+    <link th:href="@{/css/dataTables.bootstrap.css}" rel="stylesheet" type="text/css"></link>
+    <link th:href="@{/css/font-awesome.css}" rel="stylesheet" type="text/css"></link>
+    <link th:href="@{/css/jquery-ui.css}" rel="stylesheet" type="text/css"></link>
+    <link th:href="@{/css/new-style.css}" rel="stylesheet" type="text/css"></link>
+    <link th:href="@{/css/select.dataTables.min.css}" rel="stylesheet" type="text/css"></link>
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css"></link>
+    <link th:href="@{/css/style-fix.css}" rel="stylesheet" type="text/css"></link>
+    <link th:href="@{/css/sweetalert2.css}" rel="stylesheet" type="text/css"></link>
+</head>
+<body style="background-color: #d1e0e0">
+<div class="container">
+    <form class="form-new" method="post" enctype="multipart/form-data">
+        <div class="row form-group">
+            <div class="col-md-12">
+                <div class="input-group">
+                    <h1>Registration</h1>
+                    <label class="col-sm-12 control-label" id="error"></label>
+                </div>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-sm-12">
+                <input type="text" class="form-control" id="phone" name="phone" placeholder="Mobile Number"
+                       maxlength="15">
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-sm-12">
+                <input type="text" class="form-control" id="firstName" name="firstName" placeholder="First Name"
+                       maxlength="25">
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-sm-12">
+                <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Last Name"
+                       maxlength="25">
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-sm-3">
+                <select id="month" name="month" class="form-control" onchange="setDay()">
+                    <option value="0">Month</option>
+                </select>
+            </div>
+            <div class="col-sm-3">
+                <select id="day" name="day" class="form-control">
+                    <option value="0">Date</option>
+                </select>
+            </div>
+            <div class="col-sm-3">
+                <select id="year" name="year" class="form-control">
+                    <option value="0">Year</option>
+                </select>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-sm-12">
+                <label class="custom-radio"> Male
+                    <input type="radio" checked="checked" id="male" name="gender">
+                    <span class="custom-radio-label"></span>
+                </label>
+                <label class="custom-radio"> Female
+                    <input type="radio" id="female" name="gender">
+                    <span class="custom-radio-label"></span>
+                </label>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-sm-12">
+                <input type="text" class="form-control" id="email" name="email" placeholder="Email"
+                       maxlength="50">
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-sm-12">
+                <input type="text" class="form-control" id="pass" name="pass" placeholder="Password">
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-sm-12">
+                <button class="button-purple form-control" onclick="simpan();return false;">Register</button>
+            </div>
+        </div>
+    </form>
+    <script type="text/javascript" th:src="@{/js/jquery-3.1.0.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/dataTables.bootstrap.js}"></script>
+    <script type="text/javascript" th:src="@{/js/dataTables.select.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery-ui.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery.dataTables.js}"></script>
+    <script type="text/javascript" th:src="@{/js/sweetalert2.all.js}"></script>
+    <script type="text/javascript" th:src="@{/js/util.js}"></script>
+    <script>
+
+        $(document).ready(function () {
+            $("#day").prop("disabled", "disabled");
+            $("#year").prop("disabled", "disabled");
+            var month = document.getElementById("month");
+            for (var x = 0; x < 12; x++) {
+                var no = x + 1;
+                var opt = document.createElement("option");
+                opt.value = no;
+                switch (no) {
+                    case 1:
+                        opt.text = "January";
+                        break;
+                    case 2:
+                        opt.text = "February";
+                        break;
+                    case 3:
+                        opt.text = "March";
+                        break;
+                    case 4:
+                        opt.text = "April";
+                        break;
+                    case 5:
+                        opt.text = "May";
+                        break;
+                    case 6:
+                        opt.text = "June";
+                        break;
+                    case 7:
+                        opt.text = "July";
+                        break;
+                    case 8:
+                        opt.text = "August";
+                        break;
+                    case 9:
+                        opt.text = "September";
+                        break;
+                    case 10:
+                        opt.text = "October";
+                        break;
+                    case 11:
+                        opt.text = "November";
+                        break;
+                    case 12:
+                        opt.text = "December";
+                        break;
+                    default:
+                        opt.text = "Month";
+                        break;
+                }
+                month.add(opt);
+            }
+        });
+
+        function setDay() {
+            $('#day').find('option:not(:first)').remove();
+            $('#year').find('option:not(:first)').remove();
+            var month = parseInt(document.getElementById("month").value);
+            var year = parseInt(new Date().toISOString().substring(0, 4));
+            if (month === 0) {
+                $("#day").prop("disabled", "disabled");
+                $("#year").prop("disabled", "disabled");
+                showAlert('warning', "Please Choose Month");
+            } else {
+                if (month === 12) {
+                    month = 1;
+                    year = year + 1;
+                } else {
+                    month = month + 1;
+                }
+                var date = new Date(year + "-" + month + "-01");
+                if (month === 11 || month === 12) {
+                    date.setDate(date.getDate() - 1);
+                }
+                var cdate = date.toISOString();
+                var loop = parseInt(cdate.substring(8, 10));
+                var day = document.getElementById("day");
+                for (var c = 0; c < loop; c++) {
+                    var tgl = c + 1;
+                    var opt = document.createElement("option");
+                    opt.value = tgl;
+                    opt.text = tgl;
+                    day.add(opt);
+                }
+                var startYear = year - 20;
+                var endYear = year + 20;
+                var elementYear = document.getElementById("year");
+                for (var x = startYear; x <= endYear; x++) {
+                    var yearOpt = document.createElement("option");
+                    yearOpt.value = x;
+                    yearOpt.text = x;
+                    elementYear.add(yearOpt);
+                }
+                $("#day").prop("disabled", false);
+                $("#year").prop("disabled", false);
+            }
+        }
+
+        function simpan() {
+            var phone = $("phone").val();
+            var email = $("email").val();
+            var firstName = $("#firstName").val();
+            var lastName = $("#lastName").val();
+            var year = $("#year").val();
+            var month = $("#month").val();
+            var day = $("#day").val();
+            var password = $("#pass").val();
+            var message = "";
+            if (phone.length <= 0) {
+                message = "Please Insert Phone Number";
+                showAlert('warning', message);
+            } else if (email.length <= 0) {
+                message = "Please Insert Email";
+                showAlert('warning', message);
+            } else if (firstName.length <= 0) {
+                message = "Please Insert First Name";
+                showAlert('warning', message);
+            } else if (lastName.length <= 0) {
+                message = "Please Insert Last Name";
+                showAlert('warning', message);
+            } else if (year.length <= 0 || year === "0") {
+                message = "Please Insert Birth Year";
+                showAlert('warning', message);
+            } else if (month.length <= 0 || month === "0") {
+                message = "Please Insert Birth Month";
+                showAlert('warning', message);
+            } else if (day.length <= 0 || day === "0") {
+                message = "Please Insert Birth Day";
+                showAlert('warning', message);
+            } else if (password.length <= 0) {
+                message = "Please Insert Password";
+                showAlert('warning', message);
+            } else {
+                if (phone.search(/^(\+{1}\d{2,3}\s?[(]{1}\d{1,3}[)]{1}\s?\d+|\+\d{2,3}\s{1}\d+|\d+){1}[\s|-]?\d+([\s|-]?\d+){1,2}$/) <= -1) {
+                    message = "Invalid Phone Number";
+                    $("#phone").val("");
+                    showAlert('warning', message);
+                } else if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+                    message = "Invalid Email Address";
+                    $("#email").val("");
+                    showAlert('warning', message);
+                } else {
+                    var data = {};
+                    data["phone"] = phone;
+                    data["email"] = email;
+                    data["firstName"] = firstName;
+                    data["lastName"] = lastName;
+                    data["password"] = password;
+                    var date = year + "-" + month + "-" + day;
+                    data["birthDate"] = new Date(date);
+                    if (document.getElementById("male").checked === true) {
+                        data["gender"] = "Male";
+                    } else {
+                        data["gender"] = "Female";
+                    }
+                    $.ajax({
+                        url: '/account/save',
+                        type: "POST",
+                        dataType: 'json',
+                        data: JSON.stringify(data),
+                        contentType: 'application/json; charset=utf-8',
+                        cache: false,
+                        timeout: 600000,
+                        beforeSend: function () {
+                            showLoader();
+                        },
+                        success: function (data) {
+                            if (data.state === 1) {
+                                showAlert('success', "Save " + data.message, function () {
+                                    window.location = '/login';
+                                });
+                            } else {
+                                showAlert('error', "Save Failed : " + data.message);
+                            }
+                            hideLoader();
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            hideLoader();
+                            showAlert('error', "Error : " + textStatus + " : " + errorThrown);
+                        }
+                    });
+                }
+            }
+        }
+    </script>
+</div>
+</body>
+</html>
