@@ -22,13 +22,14 @@
             <div class="col-md-12">
                 <div class="input-group">
                     <h1>Registration</h1>
-                    <label class="col-sm-12 control-label" id="error"></label>
+                    <label class="col-sm-12 control-label" style="background-color: red;display: none"
+                           id="error"></label>
                 </div>
             </div>
         </div>
         <div class="row form-group">
             <div class="col-sm-12">
-                <input type="text" class="form-control" id="phone" name="phone" placeholder="Mobile Number"
+                <input type="tel" class="form-control" id="phone" name="phone" placeholder="Mobile Number"
                        maxlength="15">
             </div>
         </div>
@@ -75,7 +76,7 @@
         </div>
         <div class="row form-group">
             <div class="col-sm-12">
-                <input type="text" class="form-control" id="email" name="email" placeholder="Email"
+                <input type="email" class="form-control" id="email" name="email" placeholder="Email"
                        maxlength="50">
             </div>
         </div>
@@ -183,8 +184,8 @@
                     opt.text = tgl;
                     day.add(opt);
                 }
-                var startYear = year - 20;
-                var endYear = year + 20;
+                var startYear = year - 50;
+                var endYear = year;
                 var elementYear = document.getElementById("year");
                 for (var x = startYear; x <= endYear; x++) {
                     var yearOpt = document.createElement("option");
@@ -198,8 +199,10 @@
         }
 
         function simpan() {
-            var phone = $("phone").val();
-            var email = $("email").val();
+            var err = document.getElementById("error");
+            err.style.display = "none";
+            var phone = $("#phone").val();
+            var email = $("#email").val();
             var firstName = $("#firstName").val();
             var lastName = $("#lastName").val();
             var year = $("#year").val();
@@ -209,36 +212,57 @@
             var message = "";
             if (phone.length <= 0) {
                 message = "Please Insert Phone Number";
+                err.style.display = "block";
+                err.innerHTML = message;
                 showAlert('warning', message);
             } else if (email.length <= 0) {
                 message = "Please Insert Email";
+                err.style.display = "block";
+                err.innerHTML = message;
                 showAlert('warning', message);
             } else if (firstName.length <= 0) {
                 message = "Please Insert First Name";
+                err.style.display = "block";
+                err.innerHTML = message;
                 showAlert('warning', message);
             } else if (lastName.length <= 0) {
                 message = "Please Insert Last Name";
+                err.style.display = "block";
+                err.innerHTML = message;
                 showAlert('warning', message);
             } else if (year.length <= 0 || year === "0") {
                 message = "Please Insert Birth Year";
+                err.style.display = "block";
+                err.innerHTML = message;
                 showAlert('warning', message);
             } else if (month.length <= 0 || month === "0") {
                 message = "Please Insert Birth Month";
+                err.style.display = "block";
+                err.innerHTML = message;
                 showAlert('warning', message);
             } else if (day.length <= 0 || day === "0") {
                 message = "Please Insert Birth Day";
+                err.style.display = "block";
+                err.innerHTML = message;
                 showAlert('warning', message);
             } else if (password.length <= 0) {
                 message = "Please Insert Password";
+                err.style.display = "block";
+                err.innerHTML = message;
                 showAlert('warning', message);
             } else {
-                if (phone.search(/^(\+{1}\d{2,3}\s?[(]{1}\d{1,3}[)]{1}\s?\d+|\+\d{2,3}\s{1}\d+|\d+){1}[\s|-]?\d+([\s|-]?\d+){1,2}$/) <= -1) {
+                var reg = /^([+|\d])+([\s|\d])+([\d])$/;
+                if (!reg.test(phone)) {
                     message = "Invalid Phone Number";
                     $("#phone").val("");
+                    err.style.display = "block";
+                    err.innerHTML = message;
                     showAlert('warning', message);
-                } else if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+                } else if (!email.match(/^(?:[\w\!\#\$\%\&\'\*\+\-\/\=\?\^\`\{\|\}\~]+\.)*[\w\!\#\$\%\&\'\*\+\-\/\=\?\^\`\{\|\}\~]+@(?:(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-](?!\.)){0,61}[a-zA-Z0-9]?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9\-](?!$)){0,61}[a-zA-Z0-9]?)|(?:\[(?:(?:[01]?\d{1,2}|2[0-4]\d|25[0-5])\.){3}(?:[01]?\d{1,2}|2[0-4]\d|25[0-5])\]))$/)) {
                     message = "Invalid Email Address";
                     $("#email").val("");
+                    err.style.display = "block";
+                    err.innerHTML = message;
                     showAlert('warning', message);
                 } else {
                     var data = {};
@@ -265,13 +289,13 @@
                         beforeSend: function () {
                             showLoader();
                         },
-                        success: function (data) {
-                            if (data.state === 1) {
-                                showAlert('success', "Save " + data.message, function () {
-                                    window.location = '/login';
+                        success: function (res) {
+                            if (res.result === true) {
+                                showAlert('success', "Save " + res.message, function () {
+                                    window.location = '/page/login';
                                 });
                             } else {
-                                showAlert('error', "Save Failed : " + data.message);
+                                showAlert('error', "Save Failed : " + res.message);
                             }
                             hideLoader();
                         },
